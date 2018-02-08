@@ -1,0 +1,47 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/bda5372b-1469-4944-8801-aa993b65ba06 # 
+title: American Flights Api
+version: 1.0
+
+/flights:
+  get:
+    queryParameters:
+      code:
+    responses:
+      200:
+        body:
+          appication/json:
+            example: |
+               [{"ID":1, "code": "ER38sd","price": 400,
+                 "origin": "MUA", "destination": "SFO", "emptySeats": 0, 
+                 "planetype": "Boeing 666", "totalseats": 400},
+                 {"ID": 2,"code": "ER45if","price": 345.99, "origin": "MUA",
+                  "destination": "LAX", "emptySeats": 52, "planetype": "Boeing 777", 
+                  "totalseats": 300}]
+
+
+      
+  post:
+    body:
+      application/json:
+        example: |
+          {"code": "ER38sd","price": 400,  "origin": "MUA", "destination": "SFO",
+          "emptySeats": 0, "planetype": "Boeing 737",
+          "totalseats": 150}
+    responses: 
+      201:
+        body:
+          application/json:
+            example: |
+              {"message": "Flight added (but not really)"}
+
+  /{ID}:
+     get:
+      responses: 
+        200:
+         body:
+          application/json:
+            example: |
+              {"ID":1, "code": "ER38sd","price": 400, "origin": "MUA",
+                "destination": "SFO", "emptySeats": 0, "planetype": 
+                "Boeing 737", "totalseats": 150}

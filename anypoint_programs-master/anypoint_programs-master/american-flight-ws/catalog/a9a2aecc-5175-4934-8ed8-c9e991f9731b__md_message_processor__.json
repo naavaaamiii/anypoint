@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {},
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "qwerty"
+        }
+    },
+    "id": "a9a2aecc-5175-4934-8ed8-c9e991f9731b",
+    "version": "5.2.0.0"
+}

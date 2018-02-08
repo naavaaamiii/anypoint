@@ -1,0 +1,136 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/6f54d093-b831-48db-ae94-452498c3f7d7 # 
+title: orchard
+version: 1.0
+/orchards:
+  get:
+    responses: 
+      200:
+        body:
+          appication/json:
+            example: |
+              [{
+                "trackid": 1, 
+                "trackname": "EAI"
+                 }]
+
+
+      
+  post:
+    body:
+      application/json:
+        example: |
+            {
+              "trackid": 1, 
+              "trackname": "EAI"}
+    responses: 
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                "message": "track is added (but not really)"
+                }
+
+  /{ID}:
+     get:
+      responses: 
+        200:
+         body:
+          application/json:
+            example: |
+              {
+                "trackid": 1, 
+                "trackname": "EAI"
+                }
+
+/leads:
+  get:
+    responses: 
+      200:
+        body:
+          appication/json:
+            example: |
+              [{
+                 "leadMid": 1, 
+                 "leadname": "monica"
+                 }]
+
+
+      
+  post:
+    body:
+      application/json:
+        example: |
+            {
+              "leadMid": 1, 
+              "leadname": "monica"
+              }
+    responses: 
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                "message": "lead is added (but not really)"
+                }
+
+  /{ID}:
+     get:
+      responses: 
+        200:
+         body:
+          application/json:
+            example: |
+              {
+                "leadMid": 1, 
+                "leadname": "monica"
+                }
+      
+/campusMind:
+  get:
+    responses: 
+      200:
+        body:
+          appication/json:
+            example: |
+               [{
+                 "campusmindMid": 11, 
+                 "campusmindname": "geetha", 
+                 "cTrack": "Eai"
+                 }]
+
+
+      
+  post:
+    body:
+      application/json:
+        example: |
+            {
+              "campusmindMid": 11, 
+              "campusmindname": "geetha", 
+              "cTrack": "Eai"
+              }
+    responses: 
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                "message": "campusmind is added (but not really)"
+                }
+
+  /{ID}:
+     get:
+      responses: 
+        200:
+         body:
+          application/json:
+            example: |
+              {
+                "campusmindMid": 11, 
+                "campusmindname": "geetha", 
+                "cTrack": "Eai"
+                }
+      
+          

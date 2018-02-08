@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cluster="http://www.mulesoft.org/schema/mule/ee/cluster" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+
+
+    <configuration defaultExceptionStrategy-ref="handling-exceptionChoice_Exception_Strategy" doc:name="Configuration">
+       
+        <expression-language>
+        <global-functions>
+            def getNumSeats(type) {
+            if (type.contains('737')) {
+            return 150;
+            } else {
+            	return 300
+            }
+            }
+        </global-functions>
+        </expression-language>
+    </configuration>
+    
+    
+    
+    
+    
+    <payload-type-filter expectedType="java.util.List" name="Filter_Not_List" doc:name="Payload"/>
+<choice-exception-strategy name="handling-exceptionChoice_Exception_Strategy" >
+        <catch-exception-strategy doc:name="No flights-DW exception" when="#[exception.causeMatches('com.mulesoft.weave.*') || exception.message=='Payload is empty']">
+            <set-payload value="no flights available to #[flowVars.code+'\n'+exception]" doc:name="Set Payload"/>
+            <set-property propertyName="http.status" value="400" doc:name="Property"/>
+            <logger level="INFO" doc:name="Logger" message="this one should execute"/>
+        </catch-exception-strategy>
+        <catch-exception-strategy doc:name="Data unavailable- all other exception">
+                <set-payload value="Data unavailable.try later.#['\n'+exception]" doc:name="Set Payload"/>
+                <set-property propertyName="http.status" value="500" doc:name="Property"/>
+                <logger level="INFO" doc:name="Logger" message="this one shoudln't execute"/>
+            </catch-exception-strategy>
+    </choice-exception-strategy>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mule>

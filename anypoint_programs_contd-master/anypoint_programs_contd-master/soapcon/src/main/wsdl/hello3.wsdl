@@ -1,0 +1,47 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://main1.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SoapInterService" targetNamespace="http://main1.com/">
+<wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://main1.com/" elementFormDefault="unqualified" targetNamespace="http://main1.com/" version="1.0">
+<xs:element name="hiMessage" type="tns:hiMessage"/>
+<xs:element name="hiMessageResponse" type="tns:hiMessageResponse"/>
+<xs:complexType name="hiMessage">
+<xs:sequence>
+<xs:element minOccurs="0" name="arg0" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="hiMessageResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="hiMessage">
+<wsdl:part element="tns:hiMessage" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="hiMessageResponse">
+<wsdl:part element="tns:hiMessageResponse" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:portType name="SoapInter">
+<wsdl:operation name="hiMessage">
+<wsdl:input message="tns:hiMessage" name="hiMessage"></wsdl:input>
+<wsdl:output message="tns:hiMessageResponse" name="hiMessageResponse"></wsdl:output>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="SoapInterServiceSoapBinding" type="tns:SoapInter">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="hiMessage">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="hiMessage">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="hiMessageResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="SoapInterService">
+<wsdl:port binding="tns:SoapInterServiceSoapBinding" name="SoapInterPort">
+<soap:address location="http://localhost:8081/hello2"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

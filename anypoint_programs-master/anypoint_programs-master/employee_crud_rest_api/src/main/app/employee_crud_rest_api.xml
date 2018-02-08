@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="Welcome123" database="employees1" doc:name="MySQL Configuration"/>
+    <flow name="employee_crud_rest_apiFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/main" doc:name="HTTP"/>
+        <set-session-variable variableName="eid" value="#[message.inboundProperties.'http.query.params'.eid==empty?'':message.inboundProperties.'http.query.params'.eid]" doc:name="Session Variable"/>
+        <set-variable variableName="choice" value="#[message.inboundProperties.'http.query.params'.choice]" doc:name="employee_variable"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.choice==&quot;getemployees&quot;]">
+                <flow-ref name="employee_GET" doc:name="employee_GET"/>
+            </when>
+            <when expression="#[flowVars.choice==&quot;insertemployee&quot;]">
+                <flow-ref name="employee_insert_post" doc:name="employee_insert_post"/>
+            </when>
+            <when expression="#[flowVars.choice==&quot;deleteemployee&quot;]">
+                <flow-ref name="employee_delete" doc:name="employee_delete"/>
+            </when>
+            <otherwise>
+                <flow-ref name="employee_get_id" doc:name="employee_get_id"/>
+            </otherwise>
+        </choice>
+        <logger message="good bye" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="employee_GET">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from employee_table]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="employee_get_id">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from employee_table where id=#[message.inboundProperties.'http.query.params'.eid]]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="employee_insert_post">
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into employee_table (id,name) values (#[payload.id],#[payload.name])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="['status'!'employee inserted successfully']" doc:name="Set Payload"/>
+    </flow>
+    <flow name="employee_delete">
+        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[delete from employee_table where id=#[message.inboundProperties.'http.uri.params'.var]]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="['status'!'deleted employee successfully']" doc:name="Set Payload"/>
+    </flow>
+</mule>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="8076" doc:name="HTTP Listener Configuration"/>
+    
+    <flow name="fundamentals_of_muleFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" allowedMethods="GET" doc:name="HTTP"/>
+        <expression-filter expression="#[message.payload!='favicon.ico']" doc:name="Expression"/>
+        <set-variable variableName="language" value="#[message.inboundProperties.'http.query.params'.language]" doc:name="Set Language Variable"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.language=='kannada']">
+                <set-payload value="namaskara" doc:name="reply in kannada"/>
+            </when>
+            <when expression="#[flowVars.language=='english']">
+                <set-payload value="good morning" doc:name="reply in english"/>
+            </when>
+            <otherwise>
+                <set-payload value="sab ko namaskar" doc:name="reply in default language"/>
+            </otherwise>
+        </choice>
+        <logger message="the reply &quot;#[message.payload]&quot; means&quot;wishes&quot;in#[flowVars.language]" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+
+<spring:beans>
+<spring:bean  class="com.duplicate.FindDup" name="dup">
+</spring:bean>
+</spring:beans>
+
+    <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="8099" doc:name="HTTP Listener Configuration"/>
+    <flow name="ageexceptionFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/age1" allowedMethods="GET" doc:name="HTTP"/>
+        <set-variable variableName="age" value="#[message.inboundProperties.'http.query.params'.age]" doc:name="Variable"/>
+        <logger message="#[flowVars.age]" level="INFO" doc:name="Logger"/>
+        <message-filter throwOnUnaccepted="true" doc:name="Message">
+            <expression-filter expression="#[flowVars.age  &gt; 18]"/>
+        </message-filter>
+        <set-payload value="#[message.inboundProperties.'http.query.params'.age]" doc:name="Set Payload"/>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="400" mimeType="application/csv" doc:name="Property"/>
+            <set-payload value="#['exception caught'+'\n'+exception]" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="ageexceptionFlow1">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/dup" allowedMethods="GET" doc:name="HTTP"/>
+        <invoke object-ref="dup" method="findDup" doc:name="Invoke" methodArguments="&quot;hkjhkh&quot;"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="ageexceptionFlow2">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/duplicate/{string}" allowedMethods="GET" doc:name="HTTP"/>
+        <set-variable variableName="s" value="#[message.inboundProperties.'http.uri.params'.string]" doc:name="Variable"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <invoke object-ref="dup" method="findDup" methodArguments="#[flowVars.s]" doc:name="Invoke"/>
+        <set-payload value="#[payload]" doc:name="Set Payload"/>
+    </flow>
+</mule>

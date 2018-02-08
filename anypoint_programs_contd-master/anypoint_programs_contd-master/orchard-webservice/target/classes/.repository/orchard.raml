@@ -1,0 +1,101 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/6f54d093-b831-48db-ae94-452498c3f7d7 # 
+title: sample
+version: 1.0
+/orchards:
+  get:
+    responses:
+      200:
+        body:
+          appication/json:
+            example: |
+               [{"trackid": 1,"trackname": "eai"},
+                 {"trackid": 2,"trackname": "java"}]
+    
+  post:
+    body:
+      application/json:
+        example: |
+          {"trackid": 1,"trackname": "eai"}
+    responses: 
+      201:
+        body:
+          application/json:
+            example: |
+              {"message": "orchard added (but not really)"}
+
+  /{ID}:
+     get:
+      responses: 
+        200:
+         body:
+          application/json:
+            example: |
+              {"trackid": 1,"trackname": "eai"} 
+
+/leads:
+  get:
+    responses:
+      200:
+        body:
+          appication/json:
+            example: |
+               [{"leadMid": 101,"leadname": "monica"},
+                 {"leadMid": 110,"leadname": "jay"}]
+    
+  post:
+    body:
+      application/json:
+        example: |
+          {"leadMid": 101,"leadname": "monica"}
+    responses: 
+      201:
+        body:
+          application/json:
+            example: |
+              {"message": "leads added (but not really)"}
+
+  /{ID}:
+     get:
+      responses: 
+        200:
+         body:
+          application/json:
+            example: |
+              {"leadMid": 101,"leadname": "monica"} 
+               
+/campusmind:
+  get:
+    responses:
+      200:
+        body:
+          appication/json:
+            example: |
+               [{"campusmindMid": 32,"campusmindname": "geetha","cTrack": "eai"},
+                 {"campusmindMid": 40,"campusmindname": "jeevi","cTrack": "java"}]
+    
+  post:
+    body:
+      application/json:
+        example: |
+          {"campusmindMid": 32,"campusmindname": "geetha","cTrack": "eai"}
+    responses: 
+      201:
+        body:
+          application/json:
+            example: |
+              {"message": "campusminds added (but not really)"}
+
+  /{ID}:
+     get:
+      responses: 
+        200:
+         body:
+          application/json:
+            example: |
+              {"campusmindMid": 32,"campusmindname": "geetha","cTrack": "eai"} 
+               
+
+ 
+
+          

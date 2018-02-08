@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:filtermunit.xml"/>
+    </spring:beans>
+    <munit:test name="filter-test-suite-filtermunitFlowTest" description="Test">
+        <set-payload value="i am working ghjggj,g  on mulesoft and eai" doc:name="Set Payload"/>
+        <flow-ref name="filtermunitFlow" doc:name="Flow-ref to filtermunitFlow"/>
+        <munit:assert-payload-equals message="failed" expectedValue="#[payload == 'i am working  on mulesoft and eai']" doc:name="Assert Payload"/>
+    </munit:test>
+</mule>

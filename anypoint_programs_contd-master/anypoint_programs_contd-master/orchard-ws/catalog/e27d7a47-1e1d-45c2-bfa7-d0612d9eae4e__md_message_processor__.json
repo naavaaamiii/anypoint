@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {},
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "orchard"
+        }
+    },
+    "id": "e27d7a47-1e1d-45c2-bfa7-d0612d9eae4e",
+    "version": "5.2.0.0"
+}

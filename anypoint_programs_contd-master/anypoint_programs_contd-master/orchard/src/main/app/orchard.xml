@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="8085" doc:name="HTTP Listener Configuration"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="Welcome123" database="orchard" doc:name="MySQL Configuration"/>
+    <flow name="GetAllOrchards">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/orchard" allowedMethods="GET" doc:name="HTTP"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from orchards]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="orchardgetbyid">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/orchardgetbyid" allowedMethods="GET" doc:name="HTTP"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from orchards where TRACKID=#[message.inboundProperties.'http.query.params'.var]]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="orchardpost">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/insert" allowedMethods="POST" doc:name="HTTP"/>
+        <set-variable variableName="trackid" value="#[message.inboundProperties.'http.query.params'.trackid]" doc:name="Variable"/>
+        <set-variable variableName="trackname" value="#[message.inboundProperties.'http.query.params'.trackname]" doc:name="Variable"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into orchards values (#[flowVars.trackid],#[flowVars.trackname])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="added" doc:name="Set Payload"/>
+    </flow>
+    <flow name="GetAllLeads">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/leads" allowedMethods="GET" doc:name="HTTP"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[select * from leads]]></db:dynamic-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="leadsGetByMid">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/leadsbymid" allowedMethods="GET" doc:name="HTTP"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from leads where leadMid=#[message.inboundProperties.'http.query.params'.var]]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="inserlead">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/insertlead" allowedMethods="POST" doc:name="HTTP"/>
+        <set-variable variableName="leadmid" value="#[message.inboundProperties.'http.query.params'.leadmid]" doc:name="Variable"/>
+        <set-variable variableName="leadname" value="#[message.inboundProperties.'http.query.params'.leadname]" doc:name="Variable"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into leads values (#[flowVars.leadmid],#[flowVars.leadname])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="lead added" doc:name="Set Payload"/>
+    </flow>
+    <flow name="getAllMinds">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/minds" allowedMethods="GET" doc:name="HTTP"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from campusMind]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="mindsgetbyMid">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/mindsgetbyid" allowedMethods="GET" doc:name="HTTP"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from campusMind where campusmindMid=#[message.inboundProperties.'http.query.params'.var]]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="mindspost">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/insertminds" allowedMethods="POST" doc:name="HTTP"/>
+        <set-variable variableName="mindmid" value="#[message.inboundProperties.'http.query.params'.mindmid]" doc:name="Variable"/>
+        <set-variable variableName="mindname" value="#[message.inboundProperties.'http.query.params'.mindname]" doc:name="Variable"/>
+        <set-variable variableName="track" value="#[message.inboundProperties.'http.query.params'.track]" doc:name="Variable"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into campusMind values (#[flowVars.mindmid],#[flowVars.mindname],#[flowVars.track])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="campusminds added" doc:name="Set Payload"/>
+    </flow>
+</mule>

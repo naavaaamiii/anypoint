@@ -1,0 +1,45 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://soap.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="MessageService" targetNamespace="http://soap.com/">
+<wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://soap.com/" elementFormDefault="unqualified" targetNamespace="http://soap.com/" version="1.0">
+<xs:element name="dispalyMessage" type="tns:dispalyMessage"/>
+<xs:element name="dispalyMessageResponse" type="tns:dispalyMessageResponse"/>
+<xs:complexType name="dispalyMessage">
+<xs:sequence/>
+</xs:complexType>
+<xs:complexType name="dispalyMessageResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="dispalyMessageResponse">
+<wsdl:part element="tns:dispalyMessageResponse" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="dispalyMessage">
+<wsdl:part element="tns:dispalyMessage" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:portType name="Message">
+<wsdl:operation name="dispalyMessage">
+<wsdl:input message="tns:dispalyMessage" name="dispalyMessage"></wsdl:input>
+<wsdl:output message="tns:dispalyMessageResponse" name="dispalyMessageResponse"></wsdl:output>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="MessageServiceSoapBinding" type="tns:Message">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="dispalyMessage">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="dispalyMessage">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="dispalyMessageResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="MessageService">
+<wsdl:port binding="tns:MessageServiceSoapBinding" name="MessagePort">
+<soap:address location="http://localhost:8089/ws"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
